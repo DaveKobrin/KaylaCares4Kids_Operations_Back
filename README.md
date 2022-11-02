@@ -1,3 +1,4 @@
+![KaylaCares4Kids](./assets/kayla-cares-4-kids-logo.png)
 # Kayla Cares 4 Kids
 ## Operations Back-End
 Kayla Cares 4 Kids, Inc. is a 501(c)(3) non-profit organization. Kayla Cares 4 Kids’ mission is to help sick kids feel better by providing entertainment and educational items to children’s hospitals, Ronald McDonald Houses and related pediatric facilities worldwide.
@@ -20,6 +21,10 @@ React Native for the front end to allow for mobile device usage for the receipt 
 ## Wireframes
 > Wireframes with basic page layouts<br />
 > Copy and paste or drag and drop your images here.
+![login](./assets/wireframes/login.png)
+![inventory](./assets/wireframes/inventory.png)
+![donations](./assets/wireframes/donations.png)
+![shipments](./assets/wireframes/shipments.png)
 
 ## Feasibility Study
 > If you're using an external API or scraping a website, make sure you can get that data. If you're using a new language, framework, or tool, go through it's getting started tutorial. We *will* ask to see your results. If you are planning to use an API, please show an example of a successful fetch below to the API you wish to use in your project.
@@ -28,12 +33,18 @@ React Native for the front end to allow for mobile device usage for the receipt 
 > User stories detailing app functionality<br />
 > Add user stories following the _As a [type of user], I want [what the user wants], so that [what it helps accomplish]_ format.
 
-- As a user I want to be able to add an item into the database
-- As a user I want to be able to update the quantity of an item available
-- As a user I want to be able to see what the current available stock is of an item
-- 
-
 ### MVP Goals
-
+- As a user I want to be able to load the app on my phone
+- As a user I want to be able to create a user account
+- As a user I want to be able to log into the app for my organization
+- As a user I want to be able to add an item into the database
+- As a user I want to be able to update an item in case I entered a typo
+- As a user I want to be able to see what is the current available stock of items
+- As a user I want to be able to delete an item if I need to
 
 ### Stretch Goals
+- As a user I want to be able to track the requests from our clients and store them in the database
+- As a user I want to be able to prepare a shipment of items from the inventory and automatically adjust the quatities of items
+- As a user I want to be able to view the value of donations received durring a specified period
+- As a user I want to be able to view the fair market value of items delivered to clients for a specified period
+- As a user I want to be able to view the estimated number of children impacted by our serices
