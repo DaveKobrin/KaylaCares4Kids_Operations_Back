@@ -7,9 +7,11 @@ Kayla Cares 4 Kids, Inc. is a 501(c)(3) non-profit organization. Kayla Cares 4 K
 ## Project Description
 > Include:<br />
 > General App Idea/Purpose<br />
+
  This project is the back-end and database connection to support the daily operations of their work. The first stage of this will be targeted toward inventory of donations of various entertainment and educational items. This will eventually grow to manage requests for items from their client hospitals and facilities as well as tracking the financial information that they need for managing the organization.
 
 > What technology stack(s) are you using for your frontend / backend?<br />
+
 I will be using PostgreSQL for the data store,
 Flask for the api,
 React Native for the front end to allow for mobile device usage for the receipt of donations
