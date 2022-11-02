@@ -14,6 +14,7 @@ Kayla Cares 4 Kids, Inc. is a 501(c)(3) non-profit organization. Kayla Cares 4 K
 
 I will be using PostgreSQL for the data store,
 Flask for the api,
+also considering firebase for backend and auth,
 React Native for the front end to allow for mobile device usage for the receipt of donations
 
 > Models including field names and their datatypes<br />
