@@ -18,11 +18,24 @@ React Native for the front end to allow for mobile device usage for the receipt 
 
 > Models including field names and their datatypes<br />
 
+![KaylaCares_ERD](./assets/wireframes/KaylaCares_ERD.png)
+
 > A list of routes (e.g. `POST /pins/ allows users to post a picture of a pin`)<br />
+
+POST            /user/register  create a new user account and log it in
+POST            /user/login     log an existing user in
+GET             /user/logout    log current user out
+
+GET     INDEX   /items/         index of donated items
+GET     SHOW    /items/:id      display info of one donation item
+POST    CREATE  /items/         create a new row in the items table
+DELETE  DESTROY /items/:id      delete row matching id from items table
+PUT     UPDATE  /items/:id      update row with new values from the edit view
 
 ## Wireframes
 > Wireframes with basic page layouts<br />
 > Copy and paste or drag and drop your images here.
+
 ![login](./assets/wireframes/login.png)
 ![inventory](./assets/wireframes/inventory.png)
 ![donations](./assets/wireframes/donations.png)
