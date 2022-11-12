@@ -1,63 +1,92 @@
-from flask import Flask, g, jsonify, redirect, render_template, session, url_for
+from flask import Flask, g
+# , jsonify, redirect, render_template, session, url_for
 from flask_cors import CORS
 from dotenv import load_dotenv
 from os import environ as env
-from urllib.parse import quote_plus, urlencode
-from authlib.integrations.flask_client import OAuth
-import json
+
+from flask_talisman import Talisman
+from security.auth0_service import auth0_service
+import routes.exception_routes
+
+
+# from urllib.parse import quote_plus, urlencode
+# from authlib.integrations.flask_client import OAuth
+# import json
+
+
 
 # load environment variables
 load_dotenv()
-AUTH_DOMAIN     = env.get('AUTH0_DOMAIN')
-CLIENT_ID       = env.get('AUTH0_CLIENT_ID')
-CLIENT_SECRET   = env.get('AUTH0_CLIENT_SECRET')
-ORIGINS         = env.get('ORIGINS')
-PORT            = env.get('PORT', 5000)
-SECRET_KEY      = env.get('APP_SECRET_KEY')
+AUTH0_AUDIENCE      = env.get('AUTH0_AUDIENCE')
+AUTH0_DOMAIN        = env.get('AUTH0_DOMAIN')
+CLIENT_ORIGIN_URL   = env.get('CLIENT_ORIGIN_URL')
+PORT                = env.get('PORT', 5000)
+FLASK_ENV           = env.get('FLASK_ENV')
+if FLASK_ENV == 'development':
+    DEBUG = True
+else:
+    DEBUG = False
+
+if not (CLIENT_ORIGIN_URL and AUTH0_AUDIENCE and AUTH0_DOMAIN):
+    raise NameError("The required environment variables are missing. Check .env file.")
+
+# CLIENT_SECRET   = env.get('AUTH0_CLIENT_SECRET')
+# CLIENT_ID       = env.get('AUTH0_CLIENT_ID')
+# SECRET_KEY      = env.get('APP_SECRET_KEY')
 
 app = Flask(__name__)
-app.secret_key = SECRET_KEY
 
-oauth = OAuth(app)
-oauth.register(
-    'auth0',
-    client_id = CLIENT_ID,
-    client_secret = CLIENT_SECRET,
-    client_kwargs = { 'scope': 'openid profile email',},
-    server_metadata_url = f'https://{AUTH_DOMAIN}/.well-known/openid-configuration'
-)
+# HTTP Security Headers
+csp = {
+    'default-src': ['\'self\''],
+    'frame-ancestors': ['\'none\'']
+}
 
-@app.route("/login")
-def login():
-    return oauth.auth0.authorize_redirect(
-        redirect_uri=url_for("callback", _external=True)
+Talisman(app,
+            frame_options='DENY',
+            content_security_policy=csp,
+            referrer_policy='no-referrer'
+            )
+
+auth0_service.initialize(AUTH0_DOMAIN, AUTH0_AUDIENCE)
+
+# set response headers and close the database connection
+@app.after_request
+def after_request(response):
+    response.headers['X-XSS-Protection'] = '0'
+    response.headers['Cache-Control'] = 'no-store, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    response.headers['Content-Type'] = 'application/json; charset=utf-8'
+    # g.db.close()
+    return response
+
+# open the database connection before each request
+@app.before_request
+def before_request():
+    print('connecting to database')
+    # g.db = models.DATABASE
+    # g.db.connect
+
+
+CORS(
+    app,
+    resources={r"/api/*": {"origins":CLIENT_ORIGIN_URL}},
+    allow_headers=["Authorization", "Content-Type"],
+    methods=["GET", "POST", "PUT", "DELETE"],
+    supports_credentials=True,
+    max_age=86400
     )
 
-@app.route("/callback", methods=["GET", "POST"])
-def callback():
-    token = oauth.auth0.authorize_access_token()
-    session["user"] = token
-    return redirect("/")
+# put routes or blueprints here
 
-@app.route("/logout")
-def logout():
-    session.clear()
-    return redirect(
-        "https://" + env.get("AUTH0_DOMAIN")
-        + "/v2/logout?"
-        + urlencode(
-            {
-                "returnTo": url_for("home", _external=True),
-                "client_id": env.get("AUTH0_CLIENT_ID"),
-            },
-            quote_via=quote_plus,
-        )
-    )
+@app.route('/')
+def hello():
+    # function that gets called when the route is hit
+    print('hit home route!')
+    return 'Hello, World!'
 
-@app.route("/")
-def home():
-    return render_template("home.html", session=session.get('user'), pretty=json.dumps(session.get('user'), indent=4))
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=PORT)
+    app.run(debug=DEBUG, port=PORT)
