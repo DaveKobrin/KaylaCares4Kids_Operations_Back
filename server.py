@@ -6,8 +6,8 @@ from os import environ as env
 
 from flask_talisman import Talisman
 from security.auth0_service import auth0_service
-import routes.exception_routes
-
+from routes import exception_routes
+from routes import test_routes
 
 # from urllib.parse import quote_plus, urlencode
 # from authlib.integrations.flask_client import OAuth
@@ -79,6 +79,9 @@ CORS(
     )
 
 # put routes or blueprints here
+
+app.register_blueprint(exception_routes.bp)
+app.register_blueprint(test_routes.bp)
 
 @app.route('/')
 def hello():
