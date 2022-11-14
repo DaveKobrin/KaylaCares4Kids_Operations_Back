@@ -3,17 +3,11 @@ from flask import Flask, g
 from flask_cors import CORS
 from dotenv import load_dotenv
 from os import environ as env
-
+import models
 from flask_talisman import Talisman
 from security.auth0_service import auth0_service
-from routes import exception_routes
-from routes import test_routes
-
-# from urllib.parse import quote_plus, urlencode
-# from authlib.integrations.flask_client import OAuth
-# import json
-
-
+from resources import exception_routes
+from resources import test_routes
 
 # load environment variables
 load_dotenv()
@@ -50,6 +44,13 @@ Talisman(app,
 
 auth0_service.initialize(AUTH0_DOMAIN, AUTH0_AUDIENCE)
 
+# open the database connection before each request
+@app.before_request
+def before_request():
+    print('connecting to database')
+    g.db = models.DATABASE
+    g.db.connect
+
 # set response headers and close the database connection
 @app.after_request
 def after_request(response):
@@ -58,20 +59,13 @@ def after_request(response):
     response.headers['Pragma'] = 'no-cache'
     response.headers['Expires'] = '0'
     response.headers['Content-Type'] = 'application/json; charset=utf-8'
-    # g.db.close()
+    g.db.close()
     return response
-
-# open the database connection before each request
-@app.before_request
-def before_request():
-    print('connecting to database')
-    # g.db = models.DATABASE
-    # g.db.connect
 
 
 CORS(
     app,
-    resources={r"/api/*": {"origins":CLIENT_ORIGIN_URL}},
+    resources={"/api/*": {"origins":CLIENT_ORIGIN_URL}},
     allow_headers=["Authorization", "Content-Type"],
     methods=["GET", "POST", "PUT", "DELETE"],
     supports_credentials=True,
@@ -92,4 +86,6 @@ def hello():
 
 
 if __name__ == "__main__":
+    models.initialize()
     app.run(debug=DEBUG, port=PORT)
+    

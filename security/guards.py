@@ -17,8 +17,14 @@ invalid_request_error = {
     "message": "Requires authentication"
 }
 
-admin_messages_permissions = SimpleNamespace(
-    read="read:admin-messages"
+permissions = SimpleNamespace(
+    admin_mess_read = "read:admin-messages",
+    user_read = "read:users",
+    user_update = "update:user",
+    inventory_read = "read:inventory",
+    inventory_write = "write:inventory",
+    org_data_read = "read:org-data",
+    org_data_write = "write:org-data"
 )
 
 
