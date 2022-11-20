@@ -8,6 +8,7 @@ from flask_talisman import Talisman
 from security.auth0_service import auth0_service
 from resources import exception_routes
 from resources import test_routes
+from resources import user_routes
 
 # load environment variables
 load_dotenv()
@@ -47,6 +48,7 @@ auth0_service.initialize(AUTH0_DOMAIN, AUTH0_AUDIENCE)
 # open the database connection before each request
 @app.before_request
 def before_request():
+    g.NAMESPACE = AUTH0_AUDIENCE
     print('connecting to database')
     g.db = models.DATABASE
     g.db.connect
@@ -76,6 +78,7 @@ CORS(
 
 app.register_blueprint(exception_routes.bp)
 app.register_blueprint(test_routes.bp)
+app.register_blueprint(user_routes.bp)
 
 @app.route('/')
 def hello():
@@ -83,9 +86,6 @@ def hello():
     print('hit home route!')
     return 'Hello, World!'
 
-
-
 if __name__ == "__main__":
     models.initialize()
     app.run(debug=DEBUG, port=PORT)
-    

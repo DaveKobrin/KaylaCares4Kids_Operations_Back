@@ -16,13 +16,17 @@ class User(BaseModel):
 
 class Role(BaseModel):
     name = CharField(unique=True)
-    permission = CharField(unique=True)
+
+class Permission(BaseModel):
+    permission = CharField()
+    role_id = ForeignKeyField(Role, backref='permissions')
 
 class UserRole(BaseModel):
     user = ForeignKeyField(User)
     role = ForeignKeyField(Role)
  
 class Facility(BaseModel):
+    name = CharField()
     address1 = CharField()
     address2 = CharField(null=True)
     city = CharField()
@@ -31,7 +35,7 @@ class Facility(BaseModel):
     zipcode = CharField()
     contact_id = ForeignKeyField(User, backref='facility')
 
-class Destinations(BaseModel):
+class Destination(BaseModel):
     name = CharField()
     address1 = CharField()
     address2 = CharField(null=True)
@@ -48,14 +52,11 @@ class LookUpSheet(BaseModel):
     value = DecimalField(decimal_places=2, constraints=[Check('value >= 0.0')])
     kids_served = IntegerField(constraints=[Check('kids_served > 0')])
 
-class ItemCategory(BaseModel):
-    category = CharField(unique=True)
-
 class Item(BaseModel):
     facility_id = ForeignKeyField(Facility, backref='fac_items')
-    category_id = ForeignKeyField(ItemCategory, backref='cat_items')
+    category = CharField()
     condition = CharField(default='Gently Used')
-    quantity = IntegerField(default=1, constraints=[Check('quantity >= 0')])
+    # quantity = IntegerField(default=1, constraints=[Check('quantity >= 0')]) # removing so each item is it's own row
     fair_market_value = DecimalField(decimal_places=2)
     kids_served = IntegerField(constraints=[Check('kids_served > 0')])
     title_desc = CharField()
@@ -66,10 +67,23 @@ class Item(BaseModel):
     rating = CharField(null=True)
     location = CharField(null=True)
     upc_code = CharField(null=True)
-    date_last_modified = DateField(default=datetime.datetime.now)
-    
+    date_received = DateField(default=datetime.datetime.now)
+    date_shipped = DateField(null=True)
+    destination_id = ForeignKeyField(Destination, backref='dest_item', null=True, default=None)
+    received_by = ForeignKeyField(User, backref='user_items')
+
 def initialize():
     '''connect to database and create tables if they don't exist then close connection'''
     DATABASE.connect()
-    DATABASE.create_tables([User, Role, UserRole, Facility, Destinations, LookUpSheet, ItemCategory, Item], safe=True)
+    DATABASE.create_tables([
+        User,
+        Role,
+        Permission,
+        UserRole,
+        Facility,
+        Destination,
+        LookUpSheet,
+        # ItemCategory,
+        Item
+        ], safe=True)
     DATABASE.close()
