@@ -6,12 +6,12 @@ role_data = [
         ]
 
 permission_data = [
-        { 'permission': 'read:org-data', 'role_id': 1 },
-        { 'permission': 'write:org-data', 'role_id': 1 },
-        { 'permission': 'read:inventory', 'role_id': 3 },
-        { 'permission': 'write:inventory', 'role_id': 3 },
-        { 'permission': 'read:users', 'role_id': 4 },
-        { 'permission': 'update:users', 'role_id': 4 },
+        { 'permission': 'read:org-data',        'role_id': 1 },
+        { 'permission': 'write:org-data',       'role_id': 1 },
+        { 'permission': 'read:inventory',       'role_id': 3 },
+        { 'permission': 'write:inventory',      'role_id': 3 },
+        { 'permission': 'read:users',           'role_id': 4 },
+        { 'permission': 'update:users',         'role_id': 4 },
         ]
 
 lookup_data = [

@@ -39,7 +39,7 @@ def logout():
     if g.get('curr_user'):
         g.curr_user = {}
     return jsonify(data=g.get('curr_user'), status={'code': 200, 'message': 'logged out'}), 200
-    
+
 @bp.route("/seed")
 # @authorization_guard
 # @permissions_guard([permissions.admin_mess_read])
@@ -54,9 +54,11 @@ def seed():
         if not models.Permission.select():
             models.Permission.insert_many(seed_data.permission_data).execute()
             seeded_data = True
-
+        if not models.LookUpSheet.select():
+            models.LookUpSheet.insert_many(seed_data.lookup_data).execute()
+            seeded_data = True
     if seeded_data:
-        return jsonify(data="successfully seeded roles and permissions", message="success", status=200), 200
+        return jsonify(data="successfully seeded data", message="success", status=200), 200
     else:
         return jsonify(data="data already exists", message="no change", status=202), 202
 
