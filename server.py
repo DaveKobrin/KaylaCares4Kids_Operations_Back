@@ -63,6 +63,7 @@ def after_request(response):
     response.headers['Expires'] = '0'
     response.headers['Content-Type'] = 'application/json; charset=utf-8'
     g.db.close()
+    print('closing databse')
     return response
 
 
@@ -82,11 +83,16 @@ app.register_blueprint(test_routes.bp)
 app.register_blueprint(user_routes.bp)
 app.register_blueprint(inventory_routes.bp)
 
-@app.route('/')
-def hello():
-    # function that gets called when the route is hit
-    print('hit home route!')
-    return 'Hello, World!'
+# @app.route('/')
+# def hello():
+#     # function that gets called when the route is hit
+#     print('hit home route!')
+#     return 'Hello, World!'
+
+# initialize db for production server
+if FLASK_ENV != 'development':
+    print('initializing deployed database')
+    models.initialize()
 
 if __name__ == "__main__":
     models.initialize()

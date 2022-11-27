@@ -1,9 +1,12 @@
 from peewee import *
 import datetime
 from enum import unique
+from os import environ as env
+from playhouse.db_url import connect
 
-# Using sqlite for local dev
-DATABASE = SqliteDatabase('KaylaCares4Kids.sqlite')
+# Using sqlite for local dev or PostgreSQL for deployed app
+DATABASE = connect(env.get('DATABASE_URL') or 'Sqlite:///KaylaCares4Kids.sqlite')
+# DATABASE = SqliteDatabase('KaylaCares4Kids.sqlite')
 
 class BaseModel(Model):
     class Meta:

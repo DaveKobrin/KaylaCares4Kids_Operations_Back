@@ -22,6 +22,7 @@ def login():
     #     user_dict = model_to_dict(user)
     #     g.curr_user = user_dict
         user = verify_user_logged_in()
+        # print(user)
         return jsonify(data=user, status={'code': 200, 'message': 'logged in'}), 200
     except:
         return jsonify(data={}, status={'code': 400, 'message': 'Error logging in'}), 400
