@@ -13,7 +13,7 @@ bp = Blueprint(bp_name, __name__, url_prefix=bp_url_prefix)
 def login():
     # access_token = g.get('access_token')
     # namespace = g.get('NAMESPACE')
-    # print('hitting /login')
+    print('hitting /login')
     # print(access_token)
     # print(namespace, '    namespace')
     try:
