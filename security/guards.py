@@ -1,7 +1,8 @@
 from functools import wraps
 from http import HTTPStatus
 from types import SimpleNamespace
-
+import models
+from playhouse.shortcuts import model_to_dict
 from flask import request, g
 
 from security.auth0_service import auth0_service
@@ -70,13 +71,13 @@ def authorization_guard(function):
 def permissions_guard(required_permissions=None):
     def decorator(function):
         @wraps(function)
-        def wrapper():
+        def wrapper(*args, **kwargs):
             access_token = g.get("access_token")
             if not access_token:
                 json_abort(401, unauthorized_error)
                 return
             if required_permissions is None:
-                return function()
+                return function(*args, **kwargs)
             if not isinstance(required_permissions, list):
                 json_abort(500, {
                     "message": "Internal Server Error"
@@ -92,7 +93,29 @@ def permissions_guard(required_permissions=None):
                 json_abort(403, {
                     "message": "Permission denied"
                 })
-            return function()
+            return function(*args, **kwargs)
         return wrapper
     return decorator
 
+def verify_user_logged_in():
+    access_token = g.get('access_token')
+    namespace = g.get('NAMESPACE')
+    # print('hitting /login')
+    # print(access_token)
+    # print(namespace, '    namespace')
+    try:
+        # user found in db log in and return user data
+        user = models.User.get(models.User.email == access_token[namespace+'/email'])
+
+    except models.DoesNotExist:
+        # user not found in db register new user 
+        payload = {}    
+        payload['email'] = access_token[namespace+'/email']
+        payload['name'] = access_token[namespace+'/name'] if (namespace+'/name') in access_token.keys() else 'none given'
+        payload['phone'] = access_token[namespace+'/phone'] if (namespace+'/phone') in access_token.keys() else 'none given'
+        print(payload, '   payload')
+        user = models.User.create(**payload)
+
+    user_dict = model_to_dict(user)
+    g.curr_user = user_dict
+    return user_dict

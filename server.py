@@ -9,6 +9,7 @@ from security.auth0_service import auth0_service
 from resources import exception_routes
 from resources import test_routes
 from resources import user_routes
+from resources import inventory_routes
 
 # load environment variables
 load_dotenv()
@@ -79,6 +80,7 @@ CORS(
 app.register_blueprint(exception_routes.bp)
 app.register_blueprint(test_routes.bp)
 app.register_blueprint(user_routes.bp)
+app.register_blueprint(inventory_routes.bp)
 
 @app.route('/')
 def hello():

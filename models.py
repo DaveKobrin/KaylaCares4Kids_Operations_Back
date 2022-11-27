@@ -53,10 +53,9 @@ class LookUpSheet(BaseModel):
     kids_served = IntegerField(constraints=[Check('kids_served > 0')])
 
 class Item(BaseModel):
-    facility_id = ForeignKeyField(Facility, backref='fac_items')
+    facility_id = ForeignKeyField(Facility)
     category = CharField()
     condition = CharField(default='Gently Used')
-    # quantity = IntegerField(default=1, constraints=[Check('quantity >= 0')]) # removing so each item is it's own row
     fair_market_value = DecimalField(decimal_places=2)
     kids_served = IntegerField(constraints=[Check('kids_served > 0')])
     title_desc = CharField()
@@ -69,8 +68,8 @@ class Item(BaseModel):
     upc_code = CharField(null=True)
     date_received = DateField(default=datetime.datetime.now)
     date_shipped = DateField(null=True)
-    destination_id = ForeignKeyField(Destination, backref='dest_item', null=True, default=None)
-    received_by = ForeignKeyField(User, backref='user_items')
+    destination_id = ForeignKeyField(Destination, null=True, default=None)
+    received_by = ForeignKeyField(User)
 
 def initialize():
     '''connect to database and create tables if they don't exist then close connection'''

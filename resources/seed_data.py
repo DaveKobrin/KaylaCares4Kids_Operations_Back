@@ -35,4 +35,30 @@ lookup_data = [
         { 'description': 'new coloring/activity books, crayons, markers, paint',        'value': 5.00,          'kids_served': 1 },
         ]
 
+facility_data = [
+        { 
+                'name': 'My test Faciliy',
+                'address1': '1313 Mockingbird Lane',
+                'address2': '',
+                'city': 'Erie',
+                'state': 'IN',
+                'country': 'USA',
+                'zipcode': '00000',
+                'contact_id': '1' 
+        }
+        ]
 
+destination_data = [
+        { 
+                'name': 'My test Destination',
+                'address1': '1313 Mockingbird Lane',
+                'address2': '',
+                'city': 'Erie',
+                'state': 'IN',
+                'country': 'USA',
+                'zipcode': '00000',
+                'contact_name': 'Some Bloke',
+                'contact_email': 'me@here.net',
+                'contact_phone': '555-555-5555' 
+        }
+        ]
