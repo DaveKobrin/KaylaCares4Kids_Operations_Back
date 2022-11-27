@@ -16,6 +16,7 @@ load_dotenv()
 AUTH0_AUDIENCE      = env.get('AUTH0_AUDIENCE')
 AUTH0_DOMAIN        = env.get('AUTH0_DOMAIN')
 CLIENT_ORIGIN_URL   = env.get('CLIENT_ORIGIN_URL')
+ORIGINS             = env.get('ORIGINS')
 PORT                = env.get('PORT', 5000)
 FLASK_ENV           = env.get('FLASK_ENV')
 if FLASK_ENV == 'development':
@@ -69,7 +70,7 @@ def after_request(response):
 
 CORS(
     app,
-    resources={"/api/*": {"origins":CLIENT_ORIGIN_URL}},
+    resources={"/api/*": {"origins":ORIGINS}},
     allow_headers=["Authorization", "Content-Type"],
     methods=["GET", "POST", "PUT", "DELETE"],
     supports_credentials=True,
