@@ -100,8 +100,8 @@ def permissions_guard(required_permissions=None):
 def verify_user_logged_in():
     access_token = g.get('access_token')
     namespace = g.get('NAMESPACE')
-    # print('hitting /login')
-    # print(access_token)
+    print('hitting /login')
+    print(access_token)
     # print(namespace, '    namespace')
     try:
         # user found in db log in and return user data
