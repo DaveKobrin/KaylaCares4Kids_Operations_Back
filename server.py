@@ -16,6 +16,7 @@ load_dotenv()
 AUTH0_AUDIENCE      = env.get('AUTH0_AUDIENCE')
 AUTH0_DOMAIN        = env.get('AUTH0_DOMAIN')
 CLIENT_ORIGIN_URL   = env.get('CLIENT_ORIGIN_URL')
+ORIGINS             = env.get('ORIGINS')
 PORT                = env.get('PORT', 5000)
 FLASK_ENV           = env.get('FLASK_ENV')
 if FLASK_ENV == 'development':
@@ -66,43 +67,43 @@ def after_request(response):
     return response
 
 
-# CORS(
-#     app,
-#     resources={"/api/*": {"origins":CLIENT_ORIGIN_URL}},
+CORS(
+    app,
+    resources={"/api/*": {"origins":["http://localhost:3000", "https://kayla-cares-4-kids-operations.herokuapp.com"]}},
+    allow_headers=["Authorization", "Content-Type"],
+    methods=["GET", "POST", "PUT", "DELETE"],
+    supports_credentials=True,
+    max_age=86400
+    )
+
+# CORS(exception_routes.bp, 
+#     origins=["http://localhost:3000", "https://kayla-cares-4-kids-operations.herokuapp.com"],
 #     allow_headers=["Authorization", "Content-Type"],
 #     methods=["GET", "POST", "PUT", "DELETE"],
 #     supports_credentials=True,
 #     max_age=86400
 #     )
-
-CORS(exception_routes.bp, 
-    origins=["http://localhost:3000", "https://kayla-cares-4-kids-operations.herokuapp.com"],
-    allow_headers=["Authorization", "Content-Type"],
-    methods=["GET", "POST", "PUT", "DELETE"],
-    supports_credentials=True,
-    max_age=86400
-    )
-CORS(test_routes.bp, 
-    origins=["http://localhost:3000", "https://kayla-cares-4-kids-operations.herokuapp.com"],
-    allow_headers=["Authorization", "Content-Type"],
-    methods=["GET", "POST", "PUT", "DELETE"],
-    supports_credentials=True,
-    max_age=86400
-    )
-CORS(user_routes.bp, 
-    origins=["http://localhost:3000", "https://kayla-cares-4-kids-operations.herokuapp.com"],
-    allow_headers=["Authorization", "Content-Type"],
-    methods=["GET", "POST", "PUT", "DELETE"],
-    supports_credentials=True,
-    max_age=86400
-    )
-CORS(inventory_routes.bp, 
-    origins=["http://localhost:3000", "https://kayla-cares-4-kids-operations.herokuapp.com"],
-    allow_headers=["Authorization", "Content-Type"],
-    methods=["GET", "POST", "PUT", "DELETE"],
-    supports_credentials=True,
-    max_age=86400
-    )
+# CORS(test_routes.bp, 
+#     origins=["http://localhost:3000", "https://kayla-cares-4-kids-operations.herokuapp.com"],
+#     allow_headers=["Authorization", "Content-Type"],
+#     methods=["GET", "POST", "PUT", "DELETE"],
+#     supports_credentials=True,
+#     max_age=86400
+#     )
+# CORS(user_routes.bp, 
+#     origins=["http://localhost:3000", "https://kayla-cares-4-kids-operations.herokuapp.com"],
+#     allow_headers=["Authorization", "Content-Type"],
+#     methods=["GET", "POST", "PUT", "DELETE"],
+#     supports_credentials=True,
+#     max_age=86400
+#     )
+# CORS(inventory_routes.bp, 
+#     origins=["http://localhost:3000", "https://kayla-cares-4-kids-operations.herokuapp.com"],
+#     allow_headers=["Authorization", "Content-Type"],
+#     methods=["GET", "POST", "PUT", "DELETE"],
+#     supports_credentials=True,
+#     max_age=86400
+#     )
 
 # put routes or blueprints here
 
