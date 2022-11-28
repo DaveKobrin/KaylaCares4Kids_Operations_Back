@@ -36,7 +36,7 @@ select_fields = [
 @permissions_guard([permissions.inventory_read])
 def item_index():
     '''return all items in inventory with the name of the Facility where they are located'''
-    print ('here trying to get all items')
+    # print ('here trying to get all items')
     # try:
     result = (models.Item.select()
             # .join(models.Facility, on=(models.Item.facility_id == models.Facility.id))
@@ -46,9 +46,9 @@ def item_index():
             # .join(models.Destination, on=(models.Item.destination_id == models.Destination.id))
             .order_by(models.Item.title_desc, models.Item.condition, models.Item.date_received)
             )
-    print(result)
+    # print(result)
     result_list = [model_to_dict(item) for item in result]
-    print(result_list)
+    # print(result_list)
     return jsonify(data=result_list, status={'code': 200, 'message': f'successfully found {len(result_list)} items'}), 200
     # except:
     #     print('select failed')
@@ -60,8 +60,8 @@ def item_index():
 def item_create():    
     payload = request.get_json()
     user = verify_user_logged_in()
-    print('payload: ', payload)
-    print('curr_user: ', user)
+    # print('payload: ', payload)
+    # print('curr_user: ', user)
     if len(payload) == 1:   # create one item
         payload[0]['received_by'] = user['id']
         new_item = models.Item.create(**payload[0])
@@ -80,7 +80,7 @@ def item_create():
 @authorization_guard
 # @permissions_guard([permissions.inventory_read])
 def item_show(id):
-    print(id)
+    # print(id)
     try:
         item = models.Item.get_by_id(id)
     except:
@@ -98,9 +98,9 @@ def item_update_del(id):
         return jsonify(data={}, status={'code': 404, 'message': f'FAILED: items at id:{id} was not found'}), 404
     else:   # found the item so now process the PUT or DELETE
         payload = request.method == 'PUT' and request.get_json() # payload will be the data or false
-        print('payload: ', payload)
+        # print('payload: ', payload)
         query = models.Item.update(**payload).where(models.Item.id == id) if payload else models.Item.delete().where(models.Item.id == id)
-        print('query: ', query)
+        # print('query: ', query)
         query.execute()
         if payload:
             data = model_to_dict(models.Item.get_by_id(id))
