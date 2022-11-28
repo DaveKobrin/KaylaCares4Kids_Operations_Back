@@ -66,7 +66,7 @@ def after_request(response):
     g.db.close()
     return response
 
-
+# api wide CORS policy
 CORS(
     app,
     resources={"/api/*": {"origins":["http://localhost:3000", "https://kayla-cares-4-kids-operations.herokuapp.com"]}},
@@ -75,6 +75,7 @@ CORS(
     supports_credentials=True,
     max_age=86400
     )
+
 
 # CORS(exception_routes.bp, 
 #     origins=["http://localhost:3000", "https://kayla-cares-4-kids-operations.herokuapp.com"],
