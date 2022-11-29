@@ -12,11 +12,12 @@ bp = Blueprint(bp_name, __name__, url_prefix=bp_url_prefix)
 @permissions_guard([permissions.inventory_read])
 def lookup_item_index():
     '''return all items in inventory with the name of the Facility where they are located'''
+    print('in lookup sheet get index')
     result = (models.LookUpSheet.select()
             .order_by(models.LookUpSheet.description)
             )
     result_list = [model_to_dict(item) for item in result]
-    print(result_list)
+    # print(result_list)
     return jsonify(data=result_list, status={'code': 200, 'message': f'successfully found {len(result_list)} items'}), 200
 
 @bp.route('/', methods=['POST'])
@@ -30,17 +31,21 @@ def lookup_item_create():
 
 @bp.route('/<id>', methods=['GET'])
 @authorization_guard
-@permissions_guard([permissions.inventory_read])
+@permissions_guard([permissions.org_data_read])
 def lookup_item_show(id):    
     lookup_item = models.LookUpSheet.select().where(models.LookUpSheet.id == id)
+    print(lookup_item)
+
     if lookup_item:
-        return jsonify(data=model_to_dict(lookup_item), status={'code': 200, 'message': 'success'}),200
+        lookup_dict = model_to_dict(lookup_item)
+        print(lookup_dict)
+        return jsonify(data=lookup_dict, status={'code': 200, 'message': 'success'}),200
     else:
         return jsonify(data={}, status={'code': 404, 'message': f'FAILED: items at id:{id} was not found'}), 404
 
 @bp.route('/<id>', methods=['PUT', 'DELETE'])
 @authorization_guard
-@permissions_guard([permissions.inventory_write])
+@permissions_guard([permissions.org_data_write])
 def lookup_item_update_del(id):
     try:
         lookup_item = models.LookUpSheet.get_by_id(id) # find the item if it exists
