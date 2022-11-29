@@ -83,6 +83,7 @@ def item_show(id):
     # print(id)
     try:
         item = models.Item.get_by_id(id)
+        print(jsonify(model_to_dict(item)).get_data(as_text=True))
     except:
         return jsonify(data={}, status={'code': 404, 'message': f'FAILED: items at id:{id} was not found'}), 404
     else:

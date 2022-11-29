@@ -21,7 +21,7 @@ def lookup_item_index():
 
 @bp.route('/', methods=['POST'])
 @authorization_guard
-@permissions_guard([permissions.admin_write])
+@permissions_guard([permissions.org_data_write])
 def lookup_item_create():    
     payload = request.get_json()
     new_lookup_item = models.LookUpSheet.create(**payload)

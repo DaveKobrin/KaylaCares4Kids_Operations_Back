@@ -10,6 +10,22 @@ from resources import exception_routes
 from resources import test_routes
 from resources import user_routes
 from resources import inventory_routes
+from resources import lookup_routes
+from flask.json import JSONEncoder
+from datetime import date
+
+
+class CustomJSONEncoder(JSONEncoder):
+    def default(self, obj):
+        try:
+            if isinstance(obj, date):
+                return obj.isoformat()
+            iterable = iter(obj)
+        except TypeError:
+            pass
+        else:
+            return list(iterable)
+        return JSONEncoder.default(self, obj)
 
 # load environment variables
 load_dotenv()
@@ -32,6 +48,7 @@ if not (CLIENT_ORIGIN_URL and AUTH0_AUDIENCE and AUTH0_DOMAIN):
 # SECRET_KEY      = env.get('APP_SECRET_KEY')
 
 app = Flask(__name__)
+app.json_encoder = CustomJSONEncoder
 
 # HTTP Security Headers
 csp = {
@@ -112,6 +129,7 @@ app.register_blueprint(exception_routes.bp)
 app.register_blueprint(test_routes.bp)
 app.register_blueprint(user_routes.bp)
 app.register_blueprint(inventory_routes.bp)
+app.register_blueprint(lookup_routes.bp)
 
 @app.route('/')
 def hello():
