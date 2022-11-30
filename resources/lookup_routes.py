@@ -12,7 +12,7 @@ bp = Blueprint(bp_name, __name__, url_prefix=bp_url_prefix)
 @permissions_guard([permissions.inventory_read])
 def lookup_item_index():
     '''return all items in inventory with the name of the Facility where they are located'''
-    print('in lookup sheet get index')
+    # print('in lookup sheet get index')
     result = (models.LookUpSheet.select()
             .order_by(models.LookUpSheet.description)
             )
@@ -33,7 +33,7 @@ def lookup_item_create():
 @authorization_guard
 @permissions_guard([permissions.org_data_read])
 def lookup_item_show(id):    
-    lookup_item = models.LookUpSheet.select().where(models.LookUpSheet.id == id)
+    lookup_item = models.LookUpSheet.get_by_id(id) #select().where(models.LookUpSheet.id == id)
     print(lookup_item)
 
     if lookup_item:
