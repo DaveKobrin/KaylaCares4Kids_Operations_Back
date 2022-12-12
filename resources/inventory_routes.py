@@ -1,8 +1,9 @@
-from flask import Blueprint, jsonify, g, request
+from flask import Blueprint, jsonify, g, request, json
 from security.guards import authorization_guard, permissions_guard, permissions, verify_user_logged_in
 import models
 from playhouse.shortcuts import model_to_dict
 from peewee import *
+import requests
 
 bp_name = 'api-inventory-routes'
 bp_url_prefix = '/api/v1/inventory'
@@ -112,4 +113,20 @@ def item_update_del(id):
 
         return jsonify(data=data, status={'code': 200, 'message': message}),200
 
-
+@bp.route('upc/<upc>', methods=['GET'])
+@authorization_guard
+@permissions_guard([permissions.inventory_write])
+def item_upc_lookup(upc):
+    try:
+        headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Accept-Encoding': 'gzip,deflate',
+        }
+        resp = requests.get(f'https://api.upcitemdb.com/prod/trial/lookup?upc={upc}', headers=headers)
+        # print('resp: ',resp)
+        data = json.loads(resp.text)
+        # print('data: ', data)
+        return jsonify(data=data, status={'code': 200, 'message': 'success'}),200
+    except:
+        return jsonify(data={}, status={'code': 500, 'message': 'error in request'}), 500
