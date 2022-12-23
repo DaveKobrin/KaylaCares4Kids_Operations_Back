@@ -6,11 +6,13 @@ from os import environ as env
 import models
 from flask_talisman import Talisman
 from security.auth0_service import auth0_service
+from resources import destination_routes
 from resources import exception_routes
-from resources import test_routes
-from resources import user_routes
+from resources import facility_routes
 from resources import inventory_routes
 from resources import lookup_routes
+from resources import test_routes
+from resources import user_routes
 from flask.json import JSONEncoder
 from datetime import date
 
@@ -125,11 +127,13 @@ CORS(
 
 # put routes or blueprints here
 
+app.register_blueprint(destination_routes.bp)
 app.register_blueprint(exception_routes.bp)
-app.register_blueprint(test_routes.bp)
-app.register_blueprint(user_routes.bp)
+app.register_blueprint(facility_routes.bp)
 app.register_blueprint(inventory_routes.bp)
 app.register_blueprint(lookup_routes.bp)
+app.register_blueprint(test_routes.bp)
+app.register_blueprint(user_routes.bp)
 
 @app.route('/')
 def hello():

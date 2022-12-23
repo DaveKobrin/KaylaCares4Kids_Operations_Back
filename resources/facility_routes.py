@@ -3,38 +3,37 @@ from security.guards import authorization_guard, permissions_guard, permissions
 import models
 from playhouse.shortcuts import model_to_dict
 
-bp_name = 'api-inventory-routes'
+bp_name = 'api-facility-routes'
 bp_url_prefix = '/api/v1/facility'
 bp = Blueprint(bp_name, __name__, url_prefix=bp_url_prefix)
 
-select_fields = [
-        models.Facility.name,
-        models.Facility.address1,
-        models.Facility.address2,
-        models.Facility.city,
-        models.Facility.state,
-        models.Facility.country,
-        models.Facility.zipcode,
-        models.Facility.contact_id,
-        models.User.name,
-    ]
+# select_fields = [
+#         models.Facility.name,
+#         models.Facility.address1,
+#         models.Facility.address2,
+#         models.Facility.city,
+#         models.Facility.state,
+#         models.Facility.country,
+#         models.Facility.zipcode,
+#         models.Facility.contact_id,
+#         models.User.name,
+#     ]
 
 @bp.route('/', methods=['GET'])
 @authorization_guard
 @permissions_guard([permissions.inventory_read])
 def facility_index():
     '''return all facilities in database and the associated contact person'''
-    result = (models.Facility.select(select_fields)
-            .join(models.User)
+    result = (models.Facility.select()
             .order_by(models.Facility.state, models.Facility.city, models.Facility.name)
             )
     result_list = [model_to_dict(facility) for facility in result]
-    print(result_list)
+    # print(result_list)
     return jsonify(data=result_list, status={'code': 200, 'message': f'successfully found {len(result_list)} facilities'}), 200
 
 @bp.route('/', methods=['POST'])
 @authorization_guard
-@permissions_guard([permissions.admin_write])
+@permissions_guard([permissions.org_data_write])
 def facility_create():    
     payload = request.get_json()    
     new_facility = models.Facility.create(**payload)
@@ -46,7 +45,8 @@ def facility_create():
 @permissions_guard([permissions.inventory_read])
 def facility_show(id):
     
-    facility = models.Facility.select(select_fields).join(models.User).where(models.Facility.id == id)
+    facility = models.Facility.select().where(models.Facility.id == id)
+   
     if facility:
         return jsonify(data=model_to_dict(facility), status={'code': 200, 'message': 'success'}),200
     else:
@@ -54,7 +54,7 @@ def facility_show(id):
 
 @bp.route('/<id>', methods=['PUT']) # do not allow delete, as this would cause data inconsistancy with items table
 @authorization_guard
-@permissions_guard([permissions.admin_write])
+@permissions_guard([permissions.org_data_write])
 def facility_update(id):
     try:
         facility = models.Item.get_by_id(id) # find the facility if it exists

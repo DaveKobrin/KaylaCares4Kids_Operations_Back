@@ -15,7 +15,7 @@ def destination_index():
             .order_by(models.Destination.state, models.Destination.city, models.Destination.name)
             )
     result_list = [model_to_dict(destination) for destination in result]
-    print(result_list)
+    # print(result_list)
     return jsonify(data=result_list, status={'code': 200, 'message': f'successfully found {len(result_list)} destinations'}), 200
 
 @bp.route('/', methods=['POST'])
