@@ -59,8 +59,9 @@ def authorization_guard(function):
     @wraps(function)
     def decorator(*args, **kwargs):
         token = get_bearer_token_from_request()
+        # print('have token', token)
         validated_token = auth0_service.validate_jwt(token)
-
+        # print('validated token')
         g.access_token = validated_token
 
         return function(*args, **kwargs)
@@ -106,14 +107,16 @@ def verify_user_logged_in():
     try:
         # user found in db log in and return user data
         user = models.User.get(models.User.email == access_token[namespace+'/email'])
+        # print('userfound')
 
     except models.DoesNotExist:
         # user not found in db register new user 
+        # print('user not in db, adding')
         payload = {}    
         payload['email'] = access_token[namespace+'/email']
         payload['name'] = access_token[namespace+'/name'] if (namespace+'/name') in access_token.keys() else 'none given'
         payload['phone'] = access_token[namespace+'/phone'] if (namespace+'/phone') in access_token.keys() else 'none given'
-        print(payload, '   payload')
+        # print(payload, '   payload')
         user = models.User.create(**payload)
 
     user_dict = model_to_dict(user)

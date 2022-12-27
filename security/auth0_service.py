@@ -22,9 +22,10 @@ class Auth0Service:
     def get_signing_key(self, token):
         try:
             jwks_client = jwt.PyJWKClient(self.jwks_uri)
-
+            # print('got key')
             return jwks_client.get_signing_key_from_jwt(token).key
         except Exception as error:
+            # print('error getting key')
             json_abort(HTTPStatus.INTERNAL_SERVER_ERROR, {
                 "error": "signing_key_unavailable",
                 "error_description": error.__str__(),
@@ -43,6 +44,7 @@ class Auth0Service:
                 issuer=self.issuer_url,
             )
         except Exception as error:
+            # print('error ', error)
             json_abort(HTTPStatus.UNAUTHORIZED, {
                 "error": "invalid_token",
                 "error_description": error.__str__(),
