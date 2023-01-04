@@ -100,7 +100,9 @@ def item_update_del(id):
         return jsonify(data={}, status={'code': 404, 'message': f'FAILED: items at id:{id} was not found'}), 404
     else:   # found the item so now process the PUT or DELETE
         payload = request.method == 'PUT' and request.get_json() # payload will be the data or false
-        # print('payload: ', payload)
+        print('payload: ', payload)
+        if payload and payload['destination_id'] == 'NULL':
+            payload['destination_id'] = None
         query = models.Item.update(**payload).where(models.Item.id == id) if payload else models.Item.delete().where(models.Item.id == id)
         # print('query: ', query)
         query.execute()
