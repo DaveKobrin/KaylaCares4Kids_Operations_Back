@@ -44,13 +44,12 @@ def facility_create():
 @authorization_guard
 @permissions_guard([permissions.inventory_read])
 def facility_show(id):
-    
-    facility = models.Facility.select().where(models.Facility.id == id)
-   
+    facility = models.Facility.get_by_id(id)
     if facility:
         return jsonify(data=model_to_dict(facility), status={'code': 200, 'message': 'success'}),200
     else:
         return jsonify(data={}, status={'code': 404, 'message': f'FAILED: facility at id:{id} was not found'}), 404
+
 
 @bp.route('/<id>', methods=['PUT']) # do not allow delete, as this would cause data inconsistancy with items table
 @authorization_guard

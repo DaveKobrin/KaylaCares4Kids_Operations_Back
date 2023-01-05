@@ -34,11 +34,11 @@ def lookup_item_create():
 @permissions_guard([permissions.org_data_read])
 def lookup_item_show(id):    
     lookup_item = models.LookUpSheet.get_by_id(id) #select().where(models.LookUpSheet.id == id)
-    print(lookup_item)
+    # print(lookup_item)
 
     if lookup_item:
         lookup_dict = model_to_dict(lookup_item)
-        print(lookup_dict)
+        # print(lookup_dict)
         return jsonify(data=lookup_dict, status={'code': 200, 'message': 'success'}),200
     else:
         return jsonify(data={}, status={'code': 404, 'message': f'FAILED: items at id:{id} was not found'}), 404

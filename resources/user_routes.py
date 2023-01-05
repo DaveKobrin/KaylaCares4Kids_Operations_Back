@@ -44,6 +44,20 @@ def logout():
         g.curr_user = {}
     return jsonify(data=g.get('curr_user'), status={'code': 200, 'message': 'logged out'}), 200
 
+@bp.route('/', methods=['GET'])
+@authorization_guard
+@permissions_guard([permissions.user_read])
+def user_index():
+    '''return all users in database'''
+    # print ('here trying to get all items')
+    # try:
+    result = models.User.select()
+    # print(result)
+    result_list = [model_to_dict(item) for item in result]
+    # print(result_list)
+    return jsonify(data=result_list, status={'code': 200, 'message': f'successfully found {len(result_list)} users'}), 200
+
+
 @bp.route("/seed")
 # @authorization_guard
 # @permissions_guard([permissions.admin_mess_read])
