@@ -56,7 +56,7 @@ def facility_show(id):
 @permissions_guard([permissions.org_data_write])
 def facility_update(id):
     try:
-        facility = models.Item.get_by_id(id) # find the facility if it exists
+        facility = facility = models.Facility.get_by_id(id) # find the facility if it exists
     except: # failed to find the facility
         return jsonify(data={}, status={'code': 404, 'message': f'FAILED: facility at id:{id} was not found'}), 404
     else:   # found the facility so now process the PUT
