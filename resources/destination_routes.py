@@ -29,7 +29,7 @@ def destination_create():
 @bp.route('/<id>', methods=['GET'])
 @authorization_guard
 def destination_show(id):
-    destination = models.Destination.select().where(models.Destination.id == id)
+    destination = models.Destination.get_by_id(id)
     if destination:
         return jsonify(data=model_to_dict(destination), status={'code': 200, 'message': 'success'}),200
     else:
