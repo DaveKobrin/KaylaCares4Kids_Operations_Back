@@ -74,6 +74,21 @@ class Item(BaseModel):
     destination_id = ForeignKeyField(Destination, null=True, default=None)
     received_by = ForeignKeyField(User)
 
+class DestRequest(BaseModel):
+    dest_id = ForeignKeyField(Destination)
+    req_user_id = ForeignKeyField(User)
+    date_req = DateField(default=datetime.datetime.now)
+    processed_by = ForeignKeyField(User, null=True)
+
+class DestRequestItem(BaseModel):
+    dest_req_id = ForeignKeyField(DestRequest)
+    upc_code = CharField(null=True)
+    title_desc = CharField()
+    condition = CharField()
+    format = CharField(null=True)
+    category = CharField(null=True)
+    qty = IntegerField(default=1, constraints=[Check('qty > 0')])
+
 def initialize():
     '''connect to database and create tables if they don't exist then close connection'''
     DATABASE.connect()
