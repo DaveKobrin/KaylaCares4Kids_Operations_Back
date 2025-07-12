@@ -32,6 +32,8 @@ class CustomJSONEncoder(JSONEncoder):
 # load environment variables
 load_dotenv(dotenv_path=env_path)
 
+print(env_path.absolute)
+
 AUTH0_AUDIENCE      = env.get('AUTH0_AUDIENCE')
 AUTH0_DOMAIN        = env.get('AUTH0_DOMAIN')
 CLIENT_ORIGIN_URL   = env.get('CLIENT_ORIGIN_URL')
