@@ -21,7 +21,7 @@ def login():
     #     user = models.User.get(models.User.email == access_token[namespace+'/email'])
     #     user_dict = model_to_dict(user)
     #     g.curr_user = user_dict
-        user = verify_user_logged_in()
+        user = verify_user_logged_in() # {user: userdata, status: status}
         # print(user)
         return jsonify(data=user, status={'code': 200, 'message': 'logged in'}), 200
     except:

@@ -1,4 +1,5 @@
 *Zone.Identifier
 venv
 .env
+.htaccess
 __pycache__/

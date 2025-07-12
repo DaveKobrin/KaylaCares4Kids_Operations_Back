@@ -13,7 +13,7 @@ from resources import inventory_routes
 from resources import lookup_routes
 from resources import test_routes
 from resources import user_routes
-from flask.json import JSONEncoder
+from json import JSONEncoder
 from datetime import date
 
 

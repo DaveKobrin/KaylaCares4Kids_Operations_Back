@@ -78,6 +78,7 @@ class DestRequest(BaseModel):
     dest_id = ForeignKeyField(Destination)
     req_user_id = ForeignKeyField(User)
     date_req = DateField(default=datetime.datetime.now)
+    is_filled = BooleanField(default=False)
     processed_by = ForeignKeyField(User, null=True)
 
 class DestRequestItem(BaseModel):

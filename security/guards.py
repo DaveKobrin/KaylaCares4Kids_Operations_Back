@@ -107,6 +107,7 @@ def verify_user_logged_in():
     try:
         # user found in db log in and return user data
         user = models.User.get(models.User.email == access_token[namespace+'/email'])
+        #user.status=200
         # print('userfound')
 
     except models.DoesNotExist:
@@ -118,6 +119,7 @@ def verify_user_logged_in():
         payload['phone'] = access_token[namespace+'/phone'] if (namespace+'/phone') in access_token.keys() else 'none given'
         # print(payload, '   payload')
         user = models.User.create(**payload)
+        #user.status=201
 
     user_dict = model_to_dict(user)
     g.curr_user = user_dict
