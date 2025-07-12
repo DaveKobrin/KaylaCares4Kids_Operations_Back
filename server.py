@@ -15,7 +15,7 @@ from resources import test_routes
 from resources import user_routes
 from json import JSONEncoder
 from datetime import date
-
+from getenv_path import env_path
 
 class CustomJSONEncoder(JSONEncoder):
     def default(self, obj):
@@ -30,7 +30,8 @@ class CustomJSONEncoder(JSONEncoder):
         return JSONEncoder.default(self, obj)
 
 # load environment variables
-load_dotenv()
+load_dotenv(dotenv_path=env_path)
+
 AUTH0_AUDIENCE      = env.get('AUTH0_AUDIENCE')
 AUTH0_DOMAIN        = env.get('AUTH0_DOMAIN')
 CLIENT_ORIGIN_URL   = env.get('CLIENT_ORIGIN_URL')
