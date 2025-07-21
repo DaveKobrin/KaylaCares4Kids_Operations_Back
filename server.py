@@ -31,8 +31,8 @@ class CustomJSONEncoder(JSONEncoder):
 
 # load environment variables
 load_dotenv(dotenv_path=env_path)
-
-print(env_path.absolute)
+if env_path.exists:
+    print(env_path)
 
 AUTH0_AUDIENCE      = env.get('AUTH0_AUDIENCE')
 AUTH0_DOMAIN        = env.get('AUTH0_DOMAIN')
@@ -91,7 +91,7 @@ def after_request(response):
 # api wide CORS policy
 CORS(
     app,
-    resources={"/api/*": {"origins":["http://localhost:3000", "https://kayla-cares-4-kids-operations.herokuapp.com"]}},
+    resources={"/api/*": {"origins":["http://localhost:3000", "https://kaylacares4kidsops.netlify.app"]}},
     allow_headers=["Authorization", "Content-Type"],
     methods=["GET", "POST", "PUT", "DELETE"],
     supports_credentials=True,
@@ -141,6 +141,8 @@ app.register_blueprint(user_routes.bp)
 @app.route('/')
 def hello():
     # function that gets called when the route is hit
+    if env_path.exists:
+        print(env_path)
     print('hit home route!')
     return 'Hello, World!'
 
