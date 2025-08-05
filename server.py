@@ -13,11 +13,11 @@ from resources import inventory_routes
 from resources import lookup_routes
 from resources import test_routes
 from resources import user_routes
-from json import JSONEncoder
+import json
 from datetime import date
 from getenv_path import env_path
 
-class CustomJSONEncoder(JSONEncoder):
+class CustomJSONEncoder(json.JSONEncoder):
     def default(self, obj):
         try:
             if isinstance(obj, date):
@@ -27,7 +27,7 @@ class CustomJSONEncoder(JSONEncoder):
             pass
         else:
             return list(iterable)
-        return JSONEncoder.default(self, obj)
+        return json.JSONEncoder.default(self, obj)
 
 # load environment variables
 load_dotenv(dotenv_path=env_path)
@@ -37,7 +37,7 @@ if env_path.exists:
 AUTH0_AUDIENCE      = env.get('AUTH0_AUDIENCE')
 AUTH0_DOMAIN        = env.get('AUTH0_DOMAIN')
 CLIENT_ORIGIN_URL   = env.get('CLIENT_ORIGIN_URL')
-ORIGINS             = env.get('ORIGINS')
+ORIGINS             = json.loads(env.get('ORIGINS'))
 PORT                = env.get('PORT', 5000)
 FLASK_ENV           = env.get('FLASK_ENV')
 if FLASK_ENV == 'development':
@@ -91,42 +91,12 @@ def after_request(response):
 # api wide CORS policy
 CORS(
     app,
-    resources={"/api/*": {"origins":["http://localhost:3000", "https://kaylacares4kidsops.netlify.app"]}},
+    resources={"/api/*": {"origins":ORIGINS}},
     allow_headers=["Authorization", "Content-Type"],
     methods=["GET", "POST", "PUT", "DELETE"],
     supports_credentials=True,
     max_age=86400
     )
-
-
-# CORS(exception_routes.bp, 
-#     origins=["http://localhost:3000", "https://kayla-cares-4-kids-operations.herokuapp.com"],
-#     allow_headers=["Authorization", "Content-Type"],
-#     methods=["GET", "POST", "PUT", "DELETE"],
-#     supports_credentials=True,
-#     max_age=86400
-#     )
-# CORS(test_routes.bp, 
-#     origins=["http://localhost:3000", "https://kayla-cares-4-kids-operations.herokuapp.com"],
-#     allow_headers=["Authorization", "Content-Type"],
-#     methods=["GET", "POST", "PUT", "DELETE"],
-#     supports_credentials=True,
-#     max_age=86400
-#     )
-# CORS(user_routes.bp, 
-#     origins=["http://localhost:3000", "https://kayla-cares-4-kids-operations.herokuapp.com"],
-#     allow_headers=["Authorization", "Content-Type"],
-#     methods=["GET", "POST", "PUT", "DELETE"],
-#     supports_credentials=True,
-#     max_age=86400
-#     )
-# CORS(inventory_routes.bp, 
-#     origins=["http://localhost:3000", "https://kayla-cares-4-kids-operations.herokuapp.com"],
-#     allow_headers=["Authorization", "Content-Type"],
-#     methods=["GET", "POST", "PUT", "DELETE"],
-#     supports_credentials=True,
-#     max_age=86400
-#     )
 
 # put routes or blueprints here
 
