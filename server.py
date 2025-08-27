@@ -1,4 +1,4 @@
-from flask import Flask, g
+from flask import Flask, g, request, jsonify
 # , jsonify, redirect, render_template, session, url_for
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -17,6 +17,7 @@ import json
 from datetime import date
 from getenv_path import env_path
 
+# control JSON conversion of date objects
 class CustomJSONEncoder(json.JSONEncoder):
     def default(self, obj):
         try:
@@ -31,8 +32,8 @@ class CustomJSONEncoder(json.JSONEncoder):
 
 # load environment variables
 load_dotenv(dotenv_path=env_path)
-if env_path.exists:
-    print(env_path)
+# if env_path.exists:
+#     print(env_path)
 
 AUTH0_AUDIENCE      = env.get('AUTH0_AUDIENCE')
 AUTH0_DOMAIN        = env.get('AUTH0_DOMAIN')
@@ -47,10 +48,6 @@ else:
 
 if not (CLIENT_ORIGIN_URL and AUTH0_AUDIENCE and AUTH0_DOMAIN):
     raise NameError("The required environment variables are missing. Check .env file.")
-
-# CLIENT_SECRET   = env.get('AUTH0_CLIENT_SECRET')
-# CLIENT_ID       = env.get('AUTH0_CLIENT_ID')
-# SECRET_KEY      = env.get('APP_SECRET_KEY')
 
 app = Flask(__name__)
 app.json_encoder = CustomJSONEncoder
@@ -85,7 +82,9 @@ def after_request(response):
     response.headers['Pragma'] = 'no-cache'
     response.headers['Expires'] = '0'
     response.headers['Content-Type'] = 'application/json; charset=utf-8'
+    response.headers['Access-Control-Allow-Origin'] = request.headers['Origin']
     g.db.close()
+    print('After Request - Setting response headers - close database')
     return response
 
 # api wide CORS policy
@@ -114,7 +113,7 @@ def hello():
     if env_path.exists:
         print(env_path)
     print('hit home route!')
-    return 'Hello, World!'
+    return jsonify(data={'result': 'Successfully Hit Default Route!'}, status={'code': 200, 'message': 'SUCCESS!'}), 200
 
 if __name__ == "__main__":
     models.initialize()

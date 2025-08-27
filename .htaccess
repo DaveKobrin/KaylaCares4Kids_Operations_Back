@@ -1,0 +1,14 @@
+Options +ExecCGI
+
+#hide .env files from http access
+<FilesMatch "\.env">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+#configure request forwarding for flask in this directory
+RewriteEngine On
+RewriteBase /
+RewriteRule ^(media/.*)$ - [L]
+RewriteRule ^(flask\.wsgi/.*)$ - [L]
+RewriteRule ^(.*)$ KaylaCares4Kids/flask.wsgi/$1 [QSA,PT,L]
