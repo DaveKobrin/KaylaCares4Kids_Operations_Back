@@ -41,6 +41,7 @@ CLIENT_ORIGIN_URL   = env.get('CLIENT_ORIGIN_URL')
 ORIGINS             = json.loads(env.get('ORIGINS'))
 PORT                = env.get('PORT', 5000)
 FLASK_ENV           = env.get('FLASK_ENV')
+
 if FLASK_ENV == 'development':
     DEBUG = True
 else:
@@ -92,7 +93,7 @@ CORS(
     app,
     resources={"/api/*": {"origins":ORIGINS}},
     allow_headers=["Authorization", "Content-Type"],
-    methods=["GET", "POST", "PUT", "DELETE"],
+    methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     supports_credentials=True,
     max_age=86400
     )

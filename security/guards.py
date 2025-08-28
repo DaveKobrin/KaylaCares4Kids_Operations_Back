@@ -108,11 +108,11 @@ def verify_user_logged_in():
         # user found in db log in and return user data
         user = models.User.get(models.User.email == access_token[namespace+'/email'])
         #user.status=200
-        # print('userfound')
+        print('userfound')
 
     except models.DoesNotExist:
         # user not found in db register new user 
-        # print('user not in db, adding')
+        print('user not in db, adding')
         payload = {}    
         payload['email'] = access_token[namespace+'/email']
         payload['name'] = access_token[namespace+'/name'] if (namespace+'/name') in access_token.keys() else 'none given'
@@ -121,6 +121,13 @@ def verify_user_logged_in():
         user = models.User.create(**payload)
         #user.status=201
 
+    except Exception as e:
+        print(f'An unexpected error has occurred: {e}')
+
+    finally:
+        print('Completed verify_user_logged_in exception block')
+        
     user_dict = model_to_dict(user)
+    print('user_dict from verify_user_logged_in: ', user_dict)
     g.curr_user = user_dict
     return user_dict
